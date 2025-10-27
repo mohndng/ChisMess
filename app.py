@@ -7,9 +7,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-model = genai.GenerativeModel('gemini-pro')
+# The client gets the API key from the environment variable `GEMINI_API_KEY`.
+client = genai.Client()
 
 @app.route('/')
 def index():
@@ -18,7 +17,9 @@ def index():
 @app.route('/chat', methods=['POST'])
 def chat():
     message = request.json['message']
-    response = model.generate_content(message)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash", contents=message
+    )
     return jsonify({'reply': response.text})
 
 if __name__ == '__main__':
