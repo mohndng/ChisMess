@@ -4,3 +4,4 @@ Werkzeug==2.2.2
 google-genai
 gunicorn
 PyPDF2
+openai

@@ -5,6 +5,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const attachmentButton = document.getElementById('attachment-button');
     const fileInput = document.getElementById('file-input');
     const typingIndicator = document.getElementById('typing-indicator');
+    const geminiButton = document.getElementById('gemini-button');
+    const groqButton = document.getElementById('groq-button');
+
+    let selectedProvider = 'gemini';
+
+    geminiButton.addEventListener('click', () => {
+        selectedProvider = 'gemini';
+        geminiButton.classList.add('active');
+        groqButton.classList.remove('active');
+    });
+
+    groqButton.addEventListener('click', () => {
+        selectedProvider = 'groq';
+        groqButton.classList.add('active');
+        geminiButton.classList.remove('active');
+    });
 
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keydown', (event) => {
@@ -29,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         typingIndicator.style.display = 'flex';
 
         const formData = new FormData();
+        formData.append('provider', selectedProvider);
         formData.append('message', userMessage);
         if (file) {
             formData.append('file', file);
