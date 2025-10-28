@@ -49,6 +49,15 @@ body {
     margin-bottom: 10px;
     max-width: 80%;
     animation: fadeIn 0.5s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.duration {
+    font-size: 10px;
+    color: #999;
+    align-self: flex-end;
 }
 
 .user-message {
@@ -129,6 +138,31 @@ body {
     transform: scale(1.1);
 }
 
+.attachment-preview {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ddd;
+}
+
+#file-name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+}
+
+#remove-file-button {
+    background: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+}
+
 @keyframes slideIn {
     from {
         transform: translateY(-20px);
@@ -157,5 +191,21 @@ body {
     }
     40% {
         transform: scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .chat-container {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .header {
+        border-radius: 0;
+    }
+
+    .input-container {
+        border-radius: 0;
     }
 }
