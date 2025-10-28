@@ -45,7 +45,7 @@ def chat():
         elif provider == 'groq':
             response = groq_client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
-                model="llama3-8b-8192",
+                model="meta-llama/llama-4-maverick-17b-128e-instruct",
             )
             reply = response.choices[0].message.content
         else:
