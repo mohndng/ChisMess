@@ -39,7 +39,7 @@ def chat():
     try:
         if provider == 'gemini':
             response = gemini_client.models.generate_content(
-                model="gemini-2.5-flash", contents=prompt
+                model="gemini-2.5-pro", contents=prompt
             )
             reply = response.text
         elif provider == 'groq':
