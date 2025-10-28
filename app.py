@@ -15,9 +15,21 @@ client = genai.Client()
 def index():
     return render_template('index.html')
 
+@app.route('/models', methods=['GET'])
+def get_models():
+    # In a real-world scenario, you might want to dynamically fetch this list
+    # and filter based on accessibility. For this example, we'll use a static list
+    # of publicly known free-tier accessible models.
+    models = [
+        "gemini-1.5-flash",
+        "gemini-1.0-pro",
+    ]
+    return jsonify(models)
+
 @app.route('/chat', methods=['POST'])
 def chat():
     message = request.form['message']
+    model = request.form.get('model', 'gemini-1.5-flash') # Default to a known free model
     file = request.files.get('file')
 
     context = ""
@@ -28,10 +40,16 @@ def chat():
 
     prompt = f"{context}\n\n{message}"
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash", contents=prompt
-    )
-    return jsonify({'reply': response.text})
+    try:
+        response = client.models.generate_content(
+            model=model, contents=prompt
+        )
+        return jsonify({'reply': response.text})
+    except Exception as e:
+        # Log the error for debugging
+        print(f"Error generating content with model {model}: {e}")
+        # Provide a user-friendly error message
+        return jsonify({'error': f"Sorry, there was an error processing your request with the selected model. Please try another model or contact support."}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
