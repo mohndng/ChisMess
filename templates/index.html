@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChisMess</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="chat-container">
+        <div class="header">
+            <h1>ChisMess</h1>
+        </div>
         <div class="chat-box" id="chat-box"></div>
+        <div class="typing-indicator" id="typing-indicator" style="display: none;">
+            <span></span><span></span><span></span>
+        </div>
         <div class="input-container">
             <input type="text" id="user-input" placeholder="Type your message...">
+            <input type="file" id="file-input" accept=".pdf" style="display: none;">
+            <button id="attachment-button">📎</button>
             <button id="send-button">Send</button>
         </div>
     </div>

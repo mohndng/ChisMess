@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
+    const attachmentButton = document.getElementById('attachment-button');
+    const fileInput = document.getElementById('file-input');
+    const typingIndicator = document.getElementById('typing-indicator');
 
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keydown', (event) => {
@@ -9,26 +12,42 @@ document.addEventListener('DOMContentLoaded', () => {
             sendMessage();
         }
     });
+    attachmentButton.addEventListener('click', () => {
+        fileInput.click();
+    });
 
     function sendMessage() {
         const userMessage = userInput.value;
-        if (userMessage.trim() === '') return;
+        const file = fileInput.files[0];
+
+        if (userMessage.trim() === '' && !file) return;
 
         appendMessage('user', userMessage);
         userInput.value = '';
+        fileInput.value = '';
+
+        typingIndicator.style.display = 'flex';
+
+        const formData = new FormData();
+        formData.append('message', userMessage);
+        if (file) {
+            formData.append('file', file);
+        }
 
         fetch('/chat', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ message: userMessage })
+            body: formData
         })
         .then(response => response.json())
         .then(data => {
-            appendMessage('bot', data.reply);
+            typingIndicator.style.display = 'none';
+            const cleanedReply = data.reply.replace(/\*/g, '');
+            appendMessage('bot', cleanedReply);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            typingIndicator.style.display = 'none';
+            console.error('Error:', error);
+        });
     }
 
     function appendMessage(sender, message) {
