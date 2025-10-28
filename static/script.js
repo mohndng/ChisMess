@@ -5,48 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const attachmentButton = document.getElementById('attachment-button');
     const fileInput = document.getElementById('file-input');
     const typingIndicator = document.getElementById('typing-indicator');
-    const modelButton = document.getElementById('model-button');
-    const modelModal = document.getElementById('model-modal');
-    const closeButton = document.querySelector('.close-button');
-    const modelList = document.getElementById('model-list');
-
-    let selectedModel = 'gemini-1.5-flash'; // Default model
-
-    modelButton.addEventListener('click', () => {
-        modelModal.style.display = 'block';
-        fetchModels();
-    });
-
-    closeButton.addEventListener('click', () => {
-        modelModal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target == modelModal) {
-            modelModal.style.display = 'none';
-        }
-    });
-
-    function fetchModels() {
-        fetch('/models')
-            .then(response => response.json())
-            .then(models => {
-                modelList.innerHTML = '';
-                models.forEach(model => {
-                    const li = document.createElement('li');
-                    li.textContent = model;
-                    li.dataset.model = model;
-                    li.addEventListener('click', () => {
-                        selectedModel = model;
-                        modelModal.style.display = 'none';
-                        // Optional: Add a visual indicator for the selected model
-                        console.log(`Model selected: ${selectedModel}`);
-                    });
-                    modelList.appendChild(li);
-                });
-            })
-            .catch(error => console.error('Error fetching models:', error));
-    }
 
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keydown', (event) => {
@@ -72,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formData = new FormData();
         formData.append('message', userMessage);
-        formData.append('model', selectedModel);
         if (file) {
             formData.append('file', file);
         }
@@ -84,17 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             typingIndicator.style.display = 'none';
-            if (data.reply) {
-                const cleanedReply = data.reply.replace(/\*/g, '');
-                appendMessage('bot', cleanedReply);
-            } else if (data.error) {
-                appendMessage('bot', data.error);
-            }
+            const cleanedReply = data.reply.replace(/\*/g, '');
+            appendMessage('bot', cleanedReply);
         })
         .catch(error => {
             typingIndicator.style.display = 'none';
             console.error('Error:', error);
-            appendMessage('bot', 'Sorry, there was a network error. Please try again.');
         });
     }
 
