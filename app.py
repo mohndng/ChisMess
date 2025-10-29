@@ -44,14 +44,12 @@ def chat():
         if provider == 'gemini':
             response = gemini_client.models.generate_content(
                 model=model, contents=prompt
-                model="gemini-2.5-pro", contents=prompt
             )
             reply = response.text
         elif provider == 'groq':
             response = groq_client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
-                model=model,
-                model="meta-llama/llama-4-maverick-17b-128e-instruct",
+                model=model
             )
             reply = response.choices[0].message.content
         else:
