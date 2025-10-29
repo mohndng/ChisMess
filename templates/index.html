@@ -11,10 +11,13 @@
 <body>
     <div class="chat-container">
         <div class="header">
-            <h1>ChisMess</h1>
+            <div class="logo-container">
+                <h1>ChisMess</h1>
+                <span class="by-line">by Mon4rche</span>
+            </div>
             <div class="provider-buttons">
-                <button id="gemini-button" class="provider-button active">Gemini</button>
-                <button id="groq-button" class="provider-button">Groq</button>
+                <button id="gemini-provider-button" class="provider-button active">Gemini</button>
+                <button id="groq-provider-button" class="provider-button">Groq</button>
             </div>
         </div>
         <div class="chat-box" id="chat-box"></div>
@@ -32,6 +35,34 @@
             <button id="remove-file-button"><i class="fas fa-times"></i></button>
         </div>
     </div>
+
+    <div id="gemini-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Select a Gemini Model</h2>
+            <ul id="gemini-model-list">
+                <li data-model="gemini-2.5-pro">gemini-2.5-pro</li>
+                <li data-model="gemini-flash-latest">gemini-flash-latest</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="groq-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Select a Groq Model</h2>
+            <ul id="groq-model-list">
+                <li data-model="qwen/qwen3-32b">qwen/qwen3-32b</li>
+                <li data-model="llama-3.1-8b-instant">llama-3.1-8b-instant</li>
+                <li data-model="meta-llama/llama-4-scout-17b-16e-instruct">meta-llama/llama-4-scout-17b-16e-instruct</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>Your IP Address: {{ ip_address }}</p>
+        <p>Date and Time: {{ current_time }}</p>
+    </footer>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
