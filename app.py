@@ -4,6 +4,7 @@ from google import genai
 from openai import OpenAI
 from dotenv import load_dotenv
 import PyPDF2
+from datetime import datetime
 
 load_dotenv()
 
@@ -20,11 +21,14 @@ groq_client = OpenAI(
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    ip_address = request.remote_addr
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return render_template('index.html', ip_address=ip_address, current_time=current_time)
 
 @app.route('/chat', methods=['POST'])
 def chat():
     provider = request.form.get('provider', 'gemini')
+    model = request.form.get('model')
     message = request.form['message']
     file = request.files.get('file')
 
@@ -39,12 +43,14 @@ def chat():
     try:
         if provider == 'gemini':
             response = gemini_client.models.generate_content(
+                model=model, contents=prompt
                 model="gemini-2.5-pro", contents=prompt
             )
             reply = response.text
         elif provider == 'groq':
             response = groq_client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
+                model=model,
                 model="meta-llama/llama-4-maverick-17b-128e-instruct",
             )
             reply = response.choices[0].message.content

@@ -8,21 +8,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const attachmentPreview = document.getElementById('attachment-preview');
     const fileName = document.getElementById('file-name');
     const removeFileButton = document.getElementById('remove-file-button');
-    const geminiButton = document.getElementById('gemini-button');
-    const groqButton = document.getElementById('groq-button');
+    const geminiProviderButton = document.getElementById('gemini-provider-button');
+    const groqProviderButton = document.getElementById('groq-provider-button');
+    const geminiModal = document.getElementById('gemini-modal');
+    const groqModal = document.getElementById('groq-modal');
+    const geminiModelList = document.getElementById('gemini-model-list');
+    const groqModelList = document.getElementById('groq-model-list');
 
     let selectedProvider = 'gemini';
+    let selectedModel = 'gemini-2.5-pro';
 
-    geminiButton.addEventListener('click', () => {
-        selectedProvider = 'gemini';
-        geminiButton.classList.add('active');
-        groqButton.classList.remove('active');
+    geminiProviderButton.addEventListener('click', () => {
+        geminiModal.style.display = 'block';
     });
 
-    groqButton.addEventListener('click', () => {
-        selectedProvider = 'groq';
-        groqButton.classList.add('active');
-        geminiButton.classList.remove('active');
+    groqProviderButton.addEventListener('click', () => {
+        groqModal.style.display = 'block';
+    });
+
+    document.querySelectorAll('.close-button').forEach(button => {
+        button.addEventListener('click', () => {
+            geminiModal.style.display = 'none';
+            groqModal.style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == geminiModal || event.target == groqModal) {
+            geminiModal.style.display = 'none';
+            groqModal.style.display = 'none';
+        }
+    });
+
+    geminiModelList.addEventListener('click', (event) => {
+        if (event.target.tagName === 'LI') {
+            selectedProvider = 'gemini';
+            selectedModel = event.target.dataset.model;
+            geminiProviderButton.classList.add('active');
+            groqProviderButton.classList.remove('active');
+            geminiModal.style.display = 'none';
+        }
+    });
+
+    groqModelList.addEventListener('click', (event) => {
+        if (event.target.tagName === 'LI') {
+            selectedProvider = 'groq';
+            selectedModel = event.target.dataset.model;
+            groqProviderButton.classList.add('active');
+            geminiProviderButton.classList.remove('active');
+            groqModal.style.display = 'none';
+        }
     });
 
     sendButton.addEventListener('click', sendMessage);
@@ -64,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const startTime = Date.now();
         const formData = new FormData();
         formData.append('provider', selectedProvider);
+        formData.append('model', selectedModel);
         formData.append('message', userMessage);
         if (file) {
             formData.append('file', file);
